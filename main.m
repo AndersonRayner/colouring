@@ -1,7 +1,7 @@
 % Script for automatically colouring in images
 
 clear all
-close all
+% close all
 clc
 
 
@@ -21,7 +21,12 @@ dbstop if error
 
 % file2 = './images/24bit.bmp';
 file = './images/monochrome.bmp';
+file = './images/test4.bmp';
 % file = './images/mono_simple.bmp';
+
+
+n_colours = 15;
+
 
 %% Import Image
 imdata = imread(file);
@@ -40,6 +45,12 @@ y = 1;
 red = 1;
 green = 50;
 blue = 125;
+zones = 0;
+
+
+colours = parula(n_colours);  % https://www.mathworks.com/help/matlab/ref/colormap.html
+colours = jet(n_colours);  % https://www.mathworks.com/help/matlab/ref/colormap.html
+
 
 while ~isempty(x)
     % Find the white space
@@ -56,9 +67,13 @@ while ~isempty(x)
             %         green = green + 1; if green > 255; green = 0; end
             %         blue = blue + 1;   if blue > 255; blue = 0; end
             
-            red = rand(1) * 255;
-            green = rand(1) * 255;
-            blue = rand(1) * 255;
+%             keyboard
+            
+            idx = ceil(rand*n_colours);
+            
+            red = colours(idx,1) * 255;
+            green = colours(idx,2) * 255;
+            blue = colours(idx,3) * 255;
             
          for ii = 1:numel(x)   
             im_out(x(ii),y(ii),1) = red;
@@ -66,6 +81,8 @@ while ~isempty(x)
             im_out(x(ii),y(ii),3) = blue;
             
             imdata(x(ii),y(ii)) = 0;
+            
+            zones = zones + 1;
         end
     end
 end
@@ -81,6 +98,9 @@ subplot(1,2,2); ...
     imshow(im_out); ...
     title('Coloured');
 
+%% Save output
+save_file = fullfile('.','output',[datestr(now,'mm-dd-yyyy HH-MM-SS'),'.tiff']);
+imwrite(im_out,save_file);
 
 
 
