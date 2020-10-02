@@ -21,7 +21,7 @@ dbstop if error
 
 % file2 = './images/24bit.bmp';
 file = './images/monochrome.bmp';
-file = './images/test4.bmp';
+file = './images/unicorn.bmp';
 % file = './images/mono_simple.bmp';
 
 
