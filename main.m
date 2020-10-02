@@ -21,7 +21,7 @@ dbstop if error
 
 % file2 = './images/24bit.bmp';
 file = './images/monochrome.bmp';
-file = './images/mono_simple.bmp';
+% file = './images/mono_simple.bmp';
 
 %% Import Image
 imdata = imread(file);
@@ -41,9 +41,10 @@ red = 1;
 green = 50;
 blue = 125;
 
-% while ~isnan(x)
+while ~isempty(x)
     % Find the white space
-    [x,y] = find_white_space(imdata,1,1);
+    fprintf('Starting search at (%5d,%5d)\n',x(1),y(1));
+    [x,y] = find_white_space(imdata,x(1),y(1));
     
     
     
@@ -63,11 +64,11 @@ blue = 125;
             im_out(x(ii),y(ii),1) = red;
             im_out(x(ii),y(ii),2) = green;
             im_out(x(ii),y(ii),3) = blue;
-            %         keyboard
-            %imdata(x,y) = 0;
+            
+            imdata(x(ii),y(ii)) = 0;
         end
     end
-% end
+end
 
 
 %% Plots

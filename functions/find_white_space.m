@@ -7,20 +7,70 @@ Ypos = startY;
 idxX = [];
 idxY = [];
 
+newX = [];
+newY = [];
+
 
 [ Xmax, Ymax ] =  size(image_matrix);
-
 
 while (Xpos <=  Xmax)
     while (Ypos <= Ymax)
         
-       
+        
         % Check to find white space
-        fprintf('(%5d,%5d) : %d\n',Xpos,Ypos,image_matrix(Xpos,Ypos));
         if image_matrix(Xpos,Ypos)
-            fprintf('\tWhite found at (%5d,%5d)\n',Xpos,Ypos);
-            idxX(end+1) = Xpos;
-            idxY(end+1) = Ypos;
+            % White space found, add to the new pixel vectors
+            newX(end+1) = Xpos;
+            newY(end+1) = Ypos;
+            
+            while (~isempty(newX))
+                % Check the pixel is white, and if so, process
+                Xpos = newX(1);
+                Ypos = newY(1);
+                
+                if (image_matrix(Xpos,Ypos))
+                    
+                    % Add pixel to our output indicies
+                    idxX(end+1) = Xpos;
+                    idxY(end+1) = Ypos;
+                    
+                    % Expand out the found pixel
+                    % Look up
+                    if image_matrix(Xpos,max(Ypos-1,1))
+                        newX(end+1) = Xpos;
+                        newY(end+1) = max(Ypos-1,1);
+                    end
+                    
+                    % Look left
+                    if image_matrix(max(Xpos-1,1),Ypos)
+                        newX(end+1) = max(Xpos-1,1);
+                        newY(end+1) = Ypos;
+                    end
+                    
+                    % Look right
+                    if image_matrix(min(Xpos+1,Xmax),Ypos)
+                        newX(end+1) = min(Xpos+1,Xmax);
+                        newY(end+1) = Ypos;
+                    end
+                    
+                    % Look down
+                    if image_matrix(Xpos,min(Ypos+1,Ymax))
+                        newX(end+1) = Xpos;
+                        newY(end+1) = min(Ypos+1,Ymax);
+                    end
+                    
+                end
+                
+                % Mark pixel as indexed
+                image_matrix(Xpos,Ypos) = 0;
+                
+                % Remove from the new vectors
+                newX = newX(2:end);
+                newY = newY(2:end);
+            end
+            
+            % This part is done, return
+            return
         end
         
         % Increment Y Counter
@@ -34,54 +84,5 @@ while (Xpos <=  Xmax)
 end
 
 return
-% Loop through each pixel in the image
-for ii = startX:size(image_matrix,1)
-    for jj = startY:size(image_matrix,2)
-        % Check for white pixel
-        if image_matrix(ii,jj)
-            %              fprintf('White found at (%d, %d)\n',ii,jj);
-            x = ii;
-            y = jj;
-            
-            [ ~,x,y ] = expand_and_mark(image_matrix,x,y);
-            keyboard
-            % Expand the white space out
-            
-            
-            
-            return
-            
-        end
-    end
-    fprintf('%5d of %5d\n',ii,size(image_matrix,1));
 end
-
-% If we got this far, there are no whites left
-x = nan;
-y = nan;
-return
-end
-
-function [image_matrix_new,x_new,y_new] = expand_and_mark(image_matrix,x,y)
-
-fprintf('Checking (%d,%d) : %d\n' ,...
-    x(end),y(end),image_matrix(x(end),y(end)));
-image_matrix(x(end),y(end)) = 0;
-
-if (image_matrix(x+1,y))
-    fprintf('\tExpanding\n');
-    x = [x, x+1];
-    y = [y, y];
-    [image_matrix_new,x_new,y_new] = expand_and_mark(image_matrix,x,y);
-end
-return
-end
-
-
-
-
-
-
-
-
 
