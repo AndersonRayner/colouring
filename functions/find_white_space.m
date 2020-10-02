@@ -1,8 +1,39 @@
-function [x,y] = find_white_space(image_matrix, startX, startY)
+function [idxX,idxY] = find_white_space(image_matrix, startX, startY)
 % Returns the first index of a white pixel
 
-startY = 1;
+Xpos = startX;
+Ypos = startY;
 
+idxX = [];
+idxY = [];
+
+
+[ Xmax, Ymax ] =  size(image_matrix);
+
+
+while (Xpos <=  Xmax)
+    while (Ypos <= Ymax)
+        
+       
+        % Check to find white space
+        fprintf('(%5d,%5d) : %d\n',Xpos,Ypos,image_matrix(Xpos,Ypos));
+        if image_matrix(Xpos,Ypos)
+            fprintf('\tWhite found at (%5d,%5d)\n',Xpos,Ypos);
+            idxX(end+1) = Xpos;
+            idxY(end+1) = Ypos;
+        end
+        
+        % Increment Y Counter
+        Ypos = Ypos + 1;
+    end
+    
+    % Increment X Counter
+    Xpos = Xpos + 1;
+    Ypos = 1;
+    
+end
+
+return
 % Loop through each pixel in the image
 for ii = startX:size(image_matrix,1)
     for jj = startY:size(image_matrix,2)

@@ -4,6 +4,17 @@ clear all
 close all
 clc
 
+
+% Need to run a "checked" logical matrix
+% Iterate until finding a zero
+%     create a new_pixel vector, 
+%     iterate through the new_pixel vector, mark pixel as "checked", store in "to_fill" vector,
+%                fill by expanding each pixel out up, down, left and right, if unchecked, addd to new_pixel vector
+%                Clear out of new_pixel vector
+%     iterate until new_pixel vector becomes empty
+
+
+
 addpath('./functions/');
 dbstop if error
 
@@ -30,28 +41,33 @@ red = 1;
 green = 50;
 blue = 125;
 
-while ~isnan(x)
+% while ~isnan(x)
     % Find the white space
-    [x,y] = find_white_space(imdata,x,y);
+    [x,y] = find_white_space(imdata,1,1);
+    
+    
     
     % Colour the white space in
-    if ~isnan(x)
-%         red = red + 1;     if red > 255; red = 0; end
-%         green = green + 1; if green > 255; green = 0; end
-%         blue = blue + 1;   if blue > 255; blue = 0; end
+    if ~isempty(x)
         
-        red = rand(1) * 255;
-        green = rand(1) * 255;
-        blue = rand(1) * 255;
-              
-        
-        im_out(x,y,1) = red;
-        im_out(x,y,2) = green;
-        im_out(x,y,3) = blue;
-%         keyboard
-        imdata(x,y) = 0;
+            
+            %         red = red + 1;     if red > 255; red = 0; end
+            %         green = green + 1; if green > 255; green = 0; end
+            %         blue = blue + 1;   if blue > 255; blue = 0; end
+            
+            red = rand(1) * 255;
+            green = rand(1) * 255;
+            blue = rand(1) * 255;
+            
+         for ii = 1:numel(x)   
+            im_out(x(ii),y(ii),1) = red;
+            im_out(x(ii),y(ii),2) = green;
+            im_out(x(ii),y(ii),3) = blue;
+            %         keyboard
+            %imdata(x,y) = 0;
+        end
     end
-end
+% end
 
 
 %% Plots
