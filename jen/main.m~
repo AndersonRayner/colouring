@@ -1,0 +1,13 @@
+%Script to show examples of coloring!!
+
+close all
+clear all
+
+addpath('./functions/');
+
+filename = './../images/bluey.bmp';
+
+tic
+colorImage(filename, 'random', 'jet');
+% colorImage(filename, 'upward', []);
+% colorImage(filename, 'size', []);
