@@ -10,23 +10,42 @@ clear all
 clc
 
 addpath('./functions/');
-% dbstop if error
+dbstop if error
 
 file = './../images/mono_simple.bmp';
 file = './../images/bluey.bmp';
-file = './../images/dragon.bmp';
+% file = './../images/dragon.bmp';
 % file = './../images/elephant.bmp';
-file = './../images/flowers.bmp';
+% file = './../images/flowers.bmp';
 % file = './../images/kind.bmp';
-% file = './../images/unicorn.bmp';  
-file = './../images/pikachu.bmp';
+% file = './../images/unicorn.bmp';
 % file = './../images/awesomeness.bmp';
+
+file = './../images/pikachu.bmp';
+file = './../images/charmander.bmp';
+% file = './../images/bulbasaur.bmp';
+% file = './../images/squirtle.bmp';
+
 
 
 n_colours = 15;
 output_dir = fullfile('.','output');
 colours = jet(n_colours);  % https://www.mathworks.com/help/matlab/ref/colormap.html
-colours = hot(n_colours);
+colours = hot(n_colours);    % pikachu
+colours = winter(n_colours); % squirtle
+colours = summer(n_colours); % bulbasaur
+colours = autumn(n_colours); % charmander
+
+
+% Ideas for getting it to fill randomly
+% We'll have to determine all the zones first,
+% then randomly fill and save the image.
+% Could require lots of work
+n_zones = 1277;
+randos = rand(n_zones,1);
+[~,idx] = sort(randos);
+fill_order = 1:n_zones;
+fill_order = fill_order(idx)';
 
 
 %% Import Image
@@ -56,11 +75,20 @@ while ~isempty(x)
     
     % Colour the white space in
     if ~isempty(x)
+        zones = zones + 1;
+        
         % Select a random colour
-        if (zones == 0)
-            idx = 12;
-        else
-            idx = ceil(rand*n_colours);
+        switch (zones)
+            case 1
+                idx = 12; % background
+            case {128, 226}       % eyes
+                idx = 13;   % 10
+            case {196, 406}       % cheeks
+                idx = 8;   % 10
+            case 414       % tounge
+                idx = 5;   % 5
+            otherwise      % random
+                idx = ceil(rand*(n_colours-1)); 
         end
         
         red = colours(idx,1) * 255;
@@ -78,8 +106,14 @@ while ~isempty(x)
             
         end
         
-        zones = zones + 1;
         fprintf('Filled in Zone %4d ( %5d pixels)\n',zones,numel(x));
+        
+        % Save progress (for making videos)
+        if (0)
+%         save_file = fullfile(output_dir,['test-',num2str(zones,'%05d'),'.png']);
+%         imwrite(im_out,save_file);
+        end
+        
     end
 end
 
